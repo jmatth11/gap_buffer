@@ -1,4 +1,5 @@
 #include "gap_buffer.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -39,7 +40,7 @@ bool gap_buffer_init(struct gap_buffer *gb, size_t cap, size_t buf_size) {
   if (gb->buffer == NULL) {
     return false;
   }
-  gb->len = 0;
+  gb->len = cap;
   gb->cap = cap;
   gb->cursor_start = 0;
   gb->cursor_end = buf_size;
@@ -48,18 +49,18 @@ bool gap_buffer_init(struct gap_buffer *gb, size_t cap, size_t buf_size) {
 
 bool gap_buffer_move_cursor(struct gap_buffer *gb, size_t pos) {
   if (pos > gb->cap) return false;
-  const size_t gap_len = gb->cursor_end - gb->cursor_start;
+  const size_t gap_len = (gb->cursor_end - 1) - gb->cursor_start;
   if (pos > gb->cursor_start) {
     const size_t pos_offset = pos + gap_len;
     const size_t start_idx = gb->cursor_end;
-    for (int i = start_idx; i < pos_offset; ++i) {
+    for (size_t i = start_idx; i < pos_offset; ++i) {
       gb->buffer[gb->cursor_start] = gb->buffer[i];
       gb->cursor_start++;
     }
     gb->cursor_end = pos_offset;
-  } else {
+  } else if (pos < gb->cursor_start) {
     const size_t start_idx = gb->cursor_start - 1;
-    for (int i = start_idx; i >= pos; --i) {
+    for (size_t i = start_idx; i >= pos; --i) {
       gb->buffer[gb->cursor_end - 1] = gb->buffer[i];
       gb->cursor_end--;
     }
@@ -71,7 +72,7 @@ bool gap_buffer_move_cursor(struct gap_buffer *gb, size_t pos) {
 void gap_buffer_get_char(struct gap_buffer *gb, size_t pos, char* out) {
   if (pos > gb->cap) return;
   size_t idx = pos;
-  if (idx > gb->cursor_start) {
+  if (idx >= gb->cursor_start) {
     idx = pos + (gb->cursor_end - gb->cursor_start);
   }
   *out = gb->buffer[idx];
@@ -92,7 +93,8 @@ bool gap_buffer_insert(struct gap_buffer *gb, char c) {
 
 bool gap_buffer_insert_word(struct gap_buffer *gb, size_t pos, char* input) {
   if (!gap_buffer_move_cursor(gb, pos)) return false;
-  for (int i = 0; i < strlen(input); ++i) {
+  const size_t len = strlen(input);
+  for (int i = 0; i < len; ++i) {
     if (!gap_buffer_insert(gb, input[i])) return false;
   }
   return true;
