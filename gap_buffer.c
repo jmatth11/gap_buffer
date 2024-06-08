@@ -29,19 +29,16 @@ static bool resize_buffer(struct gap_buffer *gb) {
   return true;
 }
 
-bool gap_buffer_init(struct gap_buffer *gb, size_t cap, size_t buf_size) {
+bool gap_buffer_init(struct gap_buffer *gb, size_t buf_size) {
   if (buf_size <= 0) {
     buf_size = GAP_DEFAULT_BUFFER_SIZE;
   }
-  if (cap <= buf_size) {
-    cap = buf_size;
-  }
-  gb->buffer = (char*)malloc(sizeof(char)*cap);
+  gb->buffer = (char*)malloc(sizeof(char)*buf_size);
   if (gb->buffer == NULL) {
     return false;
   }
-  gb->len = cap;
-  gb->cap = cap;
+  gb->len = buf_size;
+  gb->cap = buf_size;
   gb->cursor_start = 0;
   gb->cursor_end = buf_size;
   return true;
@@ -49,9 +46,12 @@ bool gap_buffer_init(struct gap_buffer *gb, size_t cap, size_t buf_size) {
 
 bool gap_buffer_move_cursor(struct gap_buffer *gb, size_t pos) {
   if (pos > gb->cap) return false;
-  const size_t gap_len = (gb->cursor_end - 1) - gb->cursor_start;
+  const size_t gap_len = gb->cursor_end - gb->cursor_start;
   if (pos > gb->cursor_start) {
-    const size_t pos_offset = pos + gap_len;
+    size_t pos_offset = pos + gap_len;
+    if (pos_offset > gb->cap) {
+      pos_offset = gb->cap;
+    }
     const size_t start_idx = gb->cursor_end;
     for (size_t i = start_idx; i < pos_offset; ++i) {
       gb->buffer[gb->cursor_start] = gb->buffer[i];
