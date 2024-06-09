@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "gap_buffer.h"
 
 static void print_gb(struct gap_buffer *gb) {
@@ -50,6 +51,21 @@ int main(int argc, char** argv){
   gap_buffer_insert(&gb, 's');
 
   print_gb(&gb);
+
+  gap_buffer_free(&gb);
+
+  struct gap_buffer gb2;
+  gap_buffer_init(&gb2, 10);
+
+  const char *testStr = "a sample phrase ";
+  for (int i = 0; i < 5; ++i) {
+    for (int j = 0; j < strlen(testStr); ++j) {
+      gap_buffer_insert(&gb2, testStr[j]);
+    }
+  }
+  print_gb(&gb2);
+
+  gap_buffer_free(&gb);
 
   return EXIT_SUCCESS;
 }

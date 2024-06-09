@@ -14,18 +14,15 @@ static bool resize(struct gap_buffer *gb) {
 }
 
 static bool resize_buffer(struct gap_buffer *gb) {
-  if (gb->len + GAP_DEFAULT_BUFFER_SIZE >= gb->cap) {
-    if (!resize(gb)) {
-      return false;
-    }
+  if (!resize(gb)) {
+    return false;
   }
-  for (size_t i = gb->len - 1, j = gb->cap - 1; i >= gb->cursor_end; --i, --j) {
-    gb->buffer[j] = gb->buffer[i];
-    if (i == gb->cursor_end) {
-      gb->cursor_end = j;
-      gb->len = gb->cap;
-    }
+  size_t i = gb->len, j = gb->cap;
+  for (; i > gb->cursor_end; --i, --j) {
+    gb->buffer[j - 1] = gb->buffer[i - 1];
   }
+  gb->len = gb->cap;
+  gb->cursor_end = j;
   return true;
 }
 
@@ -86,7 +83,7 @@ size_t gap_buffer_get_len(struct gap_buffer *gb) {
 }
 
 bool gap_buffer_insert(struct gap_buffer *gb, char c) {
-  if (gb->cursor_start == gb->cursor_end) {
+  if (gb->cursor_start >= gb->cursor_end) {
     if (!resize_buffer(gb)) return false;
   }
   gb->buffer[gb->cursor_start] = c;
