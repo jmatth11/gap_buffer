@@ -6,8 +6,9 @@
 
 static bool resize(struct gap_buffer *gb) {
   const size_t new_size = ((double)gb->cap) * 1.7;
-  gb->buffer = realloc(gb->buffer, sizeof(char) * new_size);
-  if (gb->buffer == NULL) return false;
+  char* tmp_buf = realloc(gb->buffer, sizeof(char) * new_size);
+  if (tmp_buf == NULL) return false;
+  gb->buffer = tmp_buf;
   gb->cap = new_size;
   return true;
 }
