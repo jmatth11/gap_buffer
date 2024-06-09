@@ -9,13 +9,13 @@ static void print_gb(struct gap_buffer *gb) {
     gap_buffer_get_char(gb, i, &tmp);
     fprintf(stdout, "%c", tmp);
   }
-  fprintf(stdout, "\n");
+  fprintf(stdout, "|\n");
 }
 
 int main(int argc, char** argv){
 
   struct gap_buffer gb;
-  if (!gap_buffer_init(&gb, 16)) {
+  if (!gap_buffer_init(&gb, 10)) {
     fprintf(stderr, "gap buffer initialization error\n");
     exit(1);
   }

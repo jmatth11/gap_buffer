@@ -1,5 +1,4 @@
 #include "gap_buffer.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -30,6 +29,9 @@ static bool resize_buffer(struct gap_buffer *gb) {
 }
 
 bool gap_buffer_init(struct gap_buffer *gb, size_t buf_size) {
+  if (gb == NULL) {
+    return false;
+  }
   if (buf_size <= 0) {
     buf_size = GAP_DEFAULT_BUFFER_SIZE;
   }
