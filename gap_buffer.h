@@ -5,9 +5,7 @@
 #include <stdbool.h>
 #include <sys/cdefs.h>
 
-#ifdef __cplusplus
-extern "C"
-#endif
+__BEGIN_DECLS
 
 /**
  * Simple Gap Buffer structure for handling insertion and deletion of text.
@@ -85,5 +83,7 @@ bool gap_buffer_delete_seq(struct gap_buffer *gb, size_t n) __THROWNL __nonnull(
  * @param gb The gap buffer.
  */
 void gap_buffer_free(struct gap_buffer *gb) __THROWNL __nonnull((1));
+
+__END_DECLS
 
 #endif
