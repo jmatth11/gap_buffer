@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <sys/cdefs.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -25,7 +26,7 @@ struct gap_buffer {
  * @param buf_size The size of the initial buffer.
  * @returns True if successful, false otherwise.
  */
-bool gap_buffer_init(struct gap_buffer *gb, size_t buf_size);
+bool gap_buffer_init(struct gap_buffer *gb, size_t buf_size) __THROWNL __nonnull((1));
 
 /**
  * Move the cursor of the buffer to the given position.
@@ -33,7 +34,7 @@ bool gap_buffer_init(struct gap_buffer *gb, size_t buf_size);
  * @param pos The position offset to move to.
  * @returns True if successful, false otherwise.
  */
-bool gap_buffer_move_cursor(struct gap_buffer *gb, size_t pos);
+bool gap_buffer_move_cursor(struct gap_buffer *gb, size_t pos) __THROWNL __nonnull((1));
 
 /**
  * Get the char at the given position.
@@ -41,7 +42,7 @@ bool gap_buffer_move_cursor(struct gap_buffer *gb, size_t pos);
  * @param pos The position offset.
  * @param[out] out The char variable to be populated.
  */
-void gap_buffer_get_char(struct gap_buffer *gb, size_t pos, char* out);
+void gap_buffer_get_char(struct gap_buffer *gb, size_t pos, char* out) __THROWNL __nonnull((1));
 
 /**
  * Get the length of the gap buffer.
@@ -49,7 +50,7 @@ void gap_buffer_get_char(struct gap_buffer *gb, size_t pos, char* out);
  * @param gb The gap buffer.
  * @returns The length of the gap buffer.
  */
-size_t gap_buffer_get_len(struct gap_buffer *gb);
+size_t gap_buffer_get_len(struct gap_buffer *gb) __THROWNL __nonnull((1));
 
 /**
  * Insert a character at the current position.
@@ -57,7 +58,7 @@ size_t gap_buffer_get_len(struct gap_buffer *gb);
  * @param c The given character.
  * @returns True if successful, false otherwise.
  */
-bool gap_buffer_insert(struct gap_buffer *gb, char c);
+bool gap_buffer_insert(struct gap_buffer *gb, char c) __THROWNL __nonnull((1));
 /**
  * Insert a word at the given position.
  * @param gb The gap buffer.
@@ -65,24 +66,24 @@ bool gap_buffer_insert(struct gap_buffer *gb, char c);
  * @param input The given input string.
  * @returns True if successful, false otherwise.
  */
-bool gap_buffer_insert_word(struct gap_buffer *gb, size_t pos, char* input);
+bool gap_buffer_insert_word(struct gap_buffer *gb, size_t pos, char* input) __THROWNL __nonnull((1,3));
 /**
  * Delete a character to the left of the current position.
  * @param gb The gap buffer.
  * @returns True if successful, false otherwise.
  */
-bool gap_buffer_delete(struct gap_buffer *gb);
+bool gap_buffer_delete(struct gap_buffer *gb) __THROWNL __nonnull((1));
 /**
  * Delete a sequence of characters to the left of the current position.
  * @param gb The gap buffer.
  * @param n The size of the sequence.
  * @returns True if successful, false otherwise.
  */
-bool gap_buffer_delete_seq(struct gap_buffer *gb, size_t n);
+bool gap_buffer_delete_seq(struct gap_buffer *gb, size_t n) __THROWNL __nonnull((1));
 /**
  * Free the gap buffer internals.
  * @param gb The gap buffer.
  */
-void gap_buffer_free(struct gap_buffer *gb);
+void gap_buffer_free(struct gap_buffer *gb) __THROWNL __nonnull((1));
 
 #endif
